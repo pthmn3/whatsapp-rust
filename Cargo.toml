@@ -1,0 +1,58 @@
+[package]
+name = "whatsapp-native-rune"
+version = "0.1.0"
+edition = "2021"
+authors = ["Native Rust Systems Architect"]
+description = "Ultra-lightweight, high-performance native Windows WhatsApp client powered by the Rune Native UI framework."
+
+[dependencies]
+# Native GPU-rendered UI Framework (Pure Rust, no webview, no Chromium)
+rune = { git = "https://github.com/anomalyco/rune", package = "rune" }
+
+# Asynchronous Runtime & Channels
+tokio = { version = "1.41", features = ["rt-multi-thread", "sync", "time", "macros", "net", "io-util", "process"] }
+crossbeam-channel = "0.5"
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+
+# Low-overhead WebSocket & Networking (Pure Rust)
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-webpki-roots"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+prost = "0.13"
+
+# Cryptography (Noise Protocol, Curve25519, AES-GCM for WhatsApp transport encryption)
+ring = "0.17"
+aes-gcm = "0.10"
+sha2 = "0.10"
+base64 = "0.22"
+
+# Windows Native Desktop Integrations
+tray-icon = "0.19"
+notify-rust = { version = "4.11", default-features = false, features = ["windows-default"] }
+dirs = "6.0"
+
+# Audio & Video Hardware Interfacing (Voice & Video Calls)
+cpal = "0.15"       # Low-latency Windows WASAPI audio capture & playback
+webrtc = "0.12"     # Pure Rust WebRTC implementation (ICE, DTLS, SRTP, SDP)
+
+# Windows Native System API bindings
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Threading",
+    "Win32_Storage_FileSystem",
+] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# --- Extreme Performance & Ultra-Low Footprint Release Profile ---
+# Target: < 50MB RAM, sub-millisecond event dispatch, zero CPU cycles at idle
+[profile.release]
+opt-level = "z"        # Optimize aggressively for minimal binary size and tight instruction cache
+lto = "fat"            # Whole-program Link Time Optimization across all dependencies
+codegen-units = 1      # Compile all crates in a single translation unit for maximum dead-code elimination
+panic = "abort"        # Strip stack unwinding tables and landing pads
+strip = "symbols"      # Remove debug symbols, relocation sections, and symbol table
+incremental = false    # Deterministic release generation
+overflow-checks = false
