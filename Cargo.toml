@@ -27,7 +27,7 @@ base64 = "0.22"
 
 # Windows Native Desktop Integrations
 tray-icon = "0.19"
-notify-rust = { version = "4.11", default-features = false, features = ["windows-default"] }
+notify-rust = { version = "4.11", default-features = false }
 dirs = "6.0"
 
 # Audio & Video Hardware Interfacing (Voice & Video Calls)
@@ -45,6 +45,10 @@ windows = { version = "0.58", features = [
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+whatsapp-rust = { version = "0.7", default-features = false, features = ["sqlite-storage", "tokio-transport", "tokio-runtime", "ureq-client", "tokio-native", "signal"] }
+wacore = { version = "0.7", default-features = false }
+qrcode = "0.14"
+chrono = { version = "0.4", features = ["clock"] }
 
 # --- Extreme Performance & Ultra-Low Footprint Release Profile ---
 # Target: < 50MB RAM, sub-millisecond event dispatch, zero CPU cycles at idle
