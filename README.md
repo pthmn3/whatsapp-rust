@@ -63,7 +63,7 @@ Designed for systems engineers and users requiring extreme efficiency:
 ├── .gitignore          # Git exclusion rules for Rust and Windows builds
 ├── Cargo.toml          # Dependencies and aggressive size/performance release flags
 ├── LICENSE             # MIT License
-├── README.md           # Documentation and build guide
+├── README.md           # Documentation and setup guide
 └── src/
     └── main.rs         # Rune UI views, state management, and backend actors
 ```
@@ -72,39 +72,65 @@ Designed for systems engineers and users requiring extreme efficiency:
 
 ## Getting Started
 
-### Prerequisites
+### 1. Prerequisites & Installing Requirements
 
-* **Operating System**: Windows 10/11 (or cross-compilation environment targeting `x86_64-pc-windows-msvc`).
-* **Rust Toolchain**: Stable Rust 1.80+ (2021 edition).
+Before compiling the application on Windows, verify that the following tools are installed:
 
+#### A. Install Git
+Download and install Git from [git-scm.com](https://git-scm.com/) or via `winget`:
 ```powershell
-# Set default toolchain
-rustup default stable-x86_64-pc-windows-msvc
+winget install --id Git.Git -e --source winget
 ```
 
-### Development Build
+#### B. Install Visual Studio C++ Build Tools
+Rust on Windows requires the MSVC linker and C++ toolchain:
+```powershell
+winget install Microsoft.VisualStudio.2022.BuildTools --override "--passive --add Microsoft.VisualStudio.Workload.VCTools"
+```
+
+#### C. Install Rust (Rustup)
+Download and run `rustup-init.exe` from [rustup.rs](https://rustup.rs/) or install via `winget`:
+```powershell
+winget install --id Rustlang.Rustup -e --source winget
+```
+
+Configure the default toolchain to 64-bit Windows MSVC:
+```powershell
+rustup default stable-x86_64-pc-windows-msvc
+rustup update
+```
+
+---
+
+### 2. Clone the Repository
+
+Clone the repository and navigate into the project directory:
 
 ```powershell
-# Run the application in debug mode
+git clone https://github.com/pthmn3/whatsapp-rust.git
+cd whatsapp-rust
+```
+
+---
+
+### 3. Build & Run
+
+#### Development Mode (Fast Compile)
+To compile and launch the application during development:
+```powershell
 cargo run
 ```
 
-### Production Release Build (< 50MB Target)
-
-The project includes an optimized release profile in `Cargo.toml`:
-* `opt-level = "z"` (Aggressive size reduction)
-* `lto = "fat"` (Full-program link-time optimization)
-* `codegen-units = 1` (Maximum compiler optimization pass)
-* `panic = "abort"` (Removes unwinding overhead)
-* `strip = "symbols"` (Strips symbol table from final executable)
-
+#### Production Release Build (< 50MB RAM Target)
+To produce the ultra-optimized standalone release binary with whole-program Link-Time Optimization (Fat LTO) and stripped symbols:
 ```powershell
-# Compile the optimized executable
 cargo build --release
 ```
 
-The resulting standalone binary is located at:
-`target\release\whatsapp-native-rune.exe`
+The resulting standalone executable will be located at:
+```text
+target\release\whatsapp-native-rune.exe
+```
 
 ---
 
